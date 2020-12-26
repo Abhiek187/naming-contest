@@ -1,0 +1,42 @@
+{
+  "name": "naming-contest",
+  "version": "1.0.0",
+  "description": "full-stack web app using React, NodeJS, and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack -wd",
+    "start": "nodemon --exec babel-node server.js --ignore public/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abhiek187/naming-contest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abhiek187/naming-contest/issues"
+  },
+  "homepage": "https://github.com/Abhiek187/naming-contest#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.3",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.16.0",
+    "eslint-plugin-react": "^7.21.5",
+    "nodemon": "^2.0.6",
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.3.0"
+  }
+}
