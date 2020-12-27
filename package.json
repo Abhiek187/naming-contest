@@ -4,7 +4,7 @@
   "description": "full-stack web app using React, NodeJS, and MongoDB",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack -wd",
+    "dev": "webpack -w --mode=development",
     "start": "nodemon --exec babel-node server.js --ignore public/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Abhiek187/naming-contest#readme",
   "dependencies": {
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "mongodb": "^3.6.3",
     "prop-types": "^15.7.2",
