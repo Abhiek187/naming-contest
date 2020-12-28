@@ -1,31 +1,15 @@
-// import https from "https";
-
-// https.get("https://www.linkedinlearning.com", res => {
-// 	console.log("Response status code: ", res.statusCode);
-
-// 	res.on("data", chunk => {
-// 		console.log(chunk.toString());
-// 	});
-// });
-
-// import http from "http";
-
-// const server = http.createServer();
-
-// server.listen(8080);
-
-// server.on("request", (req, res) => {
-// 	res.write("Hello HTTP!\n");
-// 	setTimeout(() => {
-// 		res.write("I can stream!\n");
-// 		res.end();
-// 	}, 3000);
-// });
-
 import apiRouter from "./api";
 import config from "./config";
+import sassMiddleware from "node-sass-middleware";
+import path from "path";
+
 import express from "express";
 const server = express();
+
+server.use(sassMiddleware({
+	src: path.join(__dirname, "sass"),
+	dest: path.join(__dirname, "public")
+}));
 
 server.set("view engine", "ejs");
 

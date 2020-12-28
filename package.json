@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/Abhiek187/naming-contest#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "mongodb": "^3.6.3",
+    "node-sass-middleware": "^0.11.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
