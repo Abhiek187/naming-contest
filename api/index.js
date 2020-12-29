@@ -33,6 +33,26 @@ router.get("/contests", (req, res) => {
 		});
 });
 
+router.get("/names/:nameIds", (req, res) => {
+	// Extract each comma-separated name ID
+	const nameIds = req.params.nameIds.split(",").map(Number);
+	let names = {};
+
+	// Find all the names for each name ID
+	mdb.collection("names").find({ id: {$in: nameIds} })
+		.each((err, name) => {
+			assert.equal(null, err);
+
+			if (!name) {
+				// No more names (make the key names)
+				res.send({ names });
+				return;
+			}
+
+			names[name.id] = name;
+		});
+});
+
 // Get a dynamic contest ID route
 router.get("/contests/:contestId", (req, res) => {
 	mdb.collection("contests")
