@@ -57,7 +57,37 @@ router.get("/contests/:contestId", (req, res) => {
 	mdb.collection("contests")
 		.findOne({ _id: ObjectID(req.params.contestId) })
 		.then(contest => res.send(contest))
-		.catch(console.error);
+		.catch(error => {
+			console.error(error);
+			res.status(404).send("Bad Request");
+		});
+});
+
+router.post("/names", (req, res) => {
+	// Read the request body and send the new name as JSON
+	const contestId = ObjectID(req.body.contestId);
+	const name = req.body.newName;
+
+	// Insert the new name into names
+	mdb.collection("names").insertOne({ name }).then(result =>
+		// Find the contest associated with the name and add it to the name IDs
+		mdb.collection("contests").findAndModify(
+			{ _id: contestId }, // query to find the contest
+			[], // sort the records
+			// result.insertedId = the _id of the inserted object
+			{ $push: { nameIds: result.insertedId } }, // modify the name IDs
+			{ new: true } // return the updated collection
+		).then(doc =>
+			res.send({
+				// doc.value = updated contests collection
+				updatedContest: doc.value,
+				newName: { _id: result.insertedId, name }
+			})
+		)
+	).catch(error => {
+		console.error(error);
+		res.status(404).send("Bad Request");
+	});
 });
 
 export default router;
