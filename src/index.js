@@ -6,6 +6,6 @@ import App from "./components/App";
 
 // Preserve the server-side render and only attach event handlers
 ReactDOM.hydrate(
-	<App initialContests={window.initialData.contests} />,
+	<App initialData={window.initialData} />,
 	document.getElementById("root")
 );

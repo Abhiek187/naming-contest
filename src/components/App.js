@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import Header from "./Header";
 import Contest from "./Contest";
@@ -7,18 +8,31 @@ import * as api from "../api";
 const pushState = (obj, url) =>
 	window.history.pushState(obj, "", url);
 
+const onPopState = handler => {
+	window.onpopstate = handler;
+};
+
 class App extends React.Component {
-	state = {
-		pageHeader: "Naming Contests",
-		contests: this.props.initialContests
+	static propTypes = {
+		initialData: PropTypes.object.isRequired
 	};
+
+	state = this.props.initialData; // contains a contest property
 
 	componentDidMount() {
 		// timers, listeners, ajax...
+		onPopState(event => {
+			// Called when the back button is pressed
+			this.setState({
+				// Get the ID gotten from going back a URL
+				currentContestId: (event.state || {}).currentContestId
+			});
+		});
 	}
 
 	componentWillUnmount() {
 		// clean timers, listeners
+		onPopState(null); // unregister the event
 	}
 
 	// Go to the page with the selected contest ID
@@ -31,7 +45,6 @@ class App extends React.Component {
 		// Look up the contest
 		api.fetchContest(contestId).then(contest => {
 			this.setState({
-				pageHeader: contest.contestName,
 				currentContestId: contest.id,
 				// Cache the fetched contest information into the state
 				contests: {
@@ -42,13 +55,43 @@ class App extends React.Component {
 		});
 	}
 
+	// Get all the contests
+	fetchContestList = () => {
+		pushState(
+			{ currentContestId: null },
+			"/"
+		);
+
+		// Look up the contest
+		api.fetchContestList().then(contests => {
+			this.setState({
+				currentContestId: null,
+				contests
+			});
+		});
+	}
+
+	currentContest() {
+		return this.state.contests[this.state.currentContestId];
+	}
+
+	pageHeader() {
+		if (this.state.currentContestId) {
+			return this.currentContest().contestName;
+		} else {
+			return "Naming Contests";
+		}
+	}
+
 	currentContent() {
-		if (this.state.currentContestId !== undefined) {
-			return <Contest {...this.state.contests[this.state.currentContestId]} />
+		if (this.state.currentContestId) {
+			return <Contest
+					contestListClick={this.fetchContestList}
+					{...this.currentContest()} />;
 		} else {
 			return <ContestList
 					contests={this.state.contests}
-					onContestClick={this.fetchContest} />
+					onContestClick={this.fetchContest} />;
 		}
 	}
 
@@ -56,7 +99,7 @@ class App extends React.Component {
 		// JSX code
 		return (
 			<div className="App">
-				<Header message={this.state.pageHeader} />
+				<Header message={this.pageHeader()} />
 				{this.currentContent()}
 			</div>
 		);
