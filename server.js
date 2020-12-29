@@ -22,7 +22,10 @@ server.get(["/", "/contest/:contestId"], (req, res) => {
 				initialData
 			});
 		})
-		.catch(console.error);
+		.catch(error => {
+			console.error(error);
+			res.status(404).send("Bad Request"); // show a 404 error
+		});
 });
 
 server.use("/api", apiRouter);
