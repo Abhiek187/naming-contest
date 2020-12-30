@@ -104,7 +104,8 @@ class App extends React.Component {
 		}
 	};
 
-	addName = (newName, contestId) => {
+	addName = (newName, contestId) =>
+		// Return the state of the promise in case the server is down
 		api.addName(newName, contestId).then(resp =>
 			this.setState({
 				// Add the new name to the updated contest
@@ -117,8 +118,9 @@ class App extends React.Component {
 					[resp.newName._id]: resp.newName
 				}
 			})
-		).catch(console.error);
-	};
+		).catch(error => {
+			throw error;
+		});
 
 	// Either display all contests or the details of one contest
 	// (Not to be confused with currentContest())

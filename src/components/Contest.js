@@ -2,6 +2,10 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 
 class Contest extends Component {
+	state = {
+		error: false
+	};
+
 	componentDidMount() {
 		this.props.fetchNames(this.props.nameIds);
 	}
@@ -15,8 +19,13 @@ class Contest extends Component {
 		}
 
 		// Read the value that the user typed
-		this.props.addName(newName, this.props._id);
-		this.refs.newNameInput.value = ""; // clear the text field
+		this.props.addName(newName, this.props._id).then(resp => {
+			this.refs.newNameInput.value = ""; // clear the text field
+			this.setState({ error: false });
+		}).catch(error => {
+			// The server is down
+			this.setState({ error: true });
+		});
 	};
 
 	render() {
@@ -66,6 +75,16 @@ class Contest extends Component {
 						</form>
 					</div>
 				</div>
+
+				{this.state.error &&
+					<div>
+						<div className="alert alert-danger alert-dismissible fade show" role="alert">
+							The server has encountered an error. Please try again later.
+							<button type="button" className="btn-close" data-bs-dismiss="alert"
+								aria-label="Close"></button>
+						</div>
+					</div>
+				}
 
 				<div className="home-link link mb-3"
 					 onClick={this.props.contestListClick}>
