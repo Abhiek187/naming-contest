@@ -1,3 +1,4 @@
+// API calls on the front-end
 import axios from "axios";
 
 export const fetchContest = contestId => {

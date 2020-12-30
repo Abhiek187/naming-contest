@@ -1,3 +1,4 @@
+// Entry point for the server (configured in package.json)
 import apiRouter from "./api";
 import bodyParser from "body-parser";
 import config from "./config";
@@ -9,17 +10,19 @@ import serverRender from "./serverRender";
 const server = express();
 server.use(bodyParser.json()); // parse the body of the POST request
 
+// Convert .scss files into .css files
 server.use(sassMiddleware({
 	src: path.join(__dirname, "sass"),
 	dest: path.join(__dirname, "public")
 }));
 
-server.set("view engine", "ejs");
+server.set("view engine", "ejs"); // <%= Embedded JavaScript Templating %>
 
 // Allow all pages to be refreshed
 server.get(["/", "/contest/:contestId"], (req, res) => {
 	serverRender(req.params.contestId)
 		.then(({ initialMarkup, initialData }) => {
+			// Render index.ejs in the views folder
 			res.render("index", {
 				initialMarkup,
 				initialData
@@ -32,7 +35,7 @@ server.get(["/", "/contest/:contestId"], (req, res) => {
 });
 
 server.use("/api", apiRouter);
-server.use(express.static("public"));
+server.use(express.static("public")); // the public directory holds static content
 
 server.listen(config.port, config.host, () => {
 	console.info("Express listening on port ", config.port);

@@ -14,7 +14,9 @@ const router = express.Router();
 router.get("/contests", (req, res) => {
 	let contests = {};
 
+	// Retrieve all the contests data (key: _id, value: contest object)
 	mdb.collection("contests").find({})
+		// Only get the _id, categoryName, and the contestName
 		.project({
 			categoryName: 1,
 			contestName: 1
@@ -29,6 +31,17 @@ router.get("/contests", (req, res) => {
 			}
 
 			contests[contest._id] = contest;
+		});
+});
+
+// Get a dynamic contest ID route
+router.get("/contests/:contestId", (req, res) => {
+	mdb.collection("contests")
+		.findOne({ _id: ObjectID(req.params.contestId) })
+		.then(contest => res.send(contest))
+		.catch(error => {
+			console.error(error);
+			res.status(404).send("Bad Request");
 		});
 });
 
@@ -49,17 +62,6 @@ router.get("/names/:nameIds", (req, res) => {
 			}
 
 			names[name._id] = name;
-		});
-});
-
-// Get a dynamic contest ID route
-router.get("/contests/:contestId", (req, res) => {
-	mdb.collection("contests")
-		.findOne({ _id: ObjectID(req.params.contestId) })
-		.then(contest => res.send(contest))
-		.catch(error => {
-			console.error(error);
-			res.status(404).send("Bad Request");
 		});
 });
 

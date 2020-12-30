@@ -22,7 +22,7 @@ class Contest extends Component {
 	render() {
 		return (
 			<div className="Contest">
-				<div className="card m-3">
+				<div className="card mb-3">
 					<div className="card-header">
 						<h3 className="card-title">Contest Description</h3>
 					</div>
@@ -33,7 +33,7 @@ class Contest extends Component {
 					</div>
 				</div>
 
-				<div className="card m-3">
+				<div className="card mb-3">
 					<div className="card-header">
 						<h3 className="card-title">Proposed Names</h3>
 					</div>
@@ -48,7 +48,7 @@ class Contest extends Component {
 					</div>
 				</div>
 
-				<div className="card m-3">
+				<div className="card mb-3">
 					<div className="card-header bg-info">
 						<h3 className="card-title">Propose a New Name</h3>
 					</div>
@@ -67,7 +67,7 @@ class Contest extends Component {
 					</div>
 				</div>
 
-				<div className="home-link link"
+				<div className="home-link link mb-3"
 					 onClick={this.props.contestListClick}>
 					 Contest List
 				</div>

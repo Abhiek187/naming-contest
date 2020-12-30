@@ -30,6 +30,7 @@ const getInitialData = (contestId, apiData) => {
 	}
 };
 
+// The default function when importing serverRender
 const serverRender = contestId =>
 	axios.get(getApiUrl(contestId))
 		.then(resp => {

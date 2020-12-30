@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+// Entry point for the client (configured in webpack.config.js)
 import React from "react";
 import ReactDOM from "react-dom";
 

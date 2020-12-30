@@ -17,7 +17,7 @@ class App extends React.Component {
 		initialData: PropTypes.object.isRequired
 	};
 
-	state = this.props.initialData; // contains a contest property
+	state = this.props.initialData; // contains a contests property
 
 	componentDidMount() {
 		// timers, listeners, ajax...
@@ -85,11 +85,12 @@ class App extends React.Component {
 		return this.state.contests[this.state.currentContestId];
 	}
 
+	// What to display at the top
 	pageHeader() {
 		if (this.state.currentContestId) {
 			return this.currentContest().contestName;
 		} else {
-			return "Naming Contests";
+			return "Naming Contests"; // default header in the home page
 		}
 	}
 
@@ -119,6 +120,8 @@ class App extends React.Component {
 		).catch(console.error);
 	};
 
+	// Either display all contests or the details of one contest
+	// (Not to be confused with currentContest())
 	currentContent() {
 		if (this.state.currentContestId) {
 			return <Contest
