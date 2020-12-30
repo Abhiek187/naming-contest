@@ -3,6 +3,7 @@
 	border: 1px solid #ccc;
 
 	.category-name {
+		/* Large, bold text, light gray background and border */
 		border-bottom: 1px solid #ccc;
 		padding: 0.25em 0.5em;
 		font-weight: bold;
@@ -18,7 +19,13 @@
 	cursor: pointer;
 }
 
+.name-scroll {
+	/* Scroll if the proposed names list gets too big */
+	max-height: 200px;
+	overflow-y: auto;
+}
+
 .home-link {
 	margin-top: 1em;
-	color: #00e;
+	color: #00e; /* blue link */
 }

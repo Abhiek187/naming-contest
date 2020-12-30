@@ -37,7 +37,7 @@ class Contest extends Component {
 					<div className="card-header">
 						<h3 className="card-title">Proposed Names</h3>
 					</div>
-					<div className="card-body">
+					<div className="card-body name-scroll">
 						<ul className="list-group">
 							{this.props.nameIds.map(nameId =>
 								<li key={nameId} className="list-group-item">
