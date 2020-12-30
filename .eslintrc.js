@@ -7,19 +7,33 @@ module.exports = {
 		node: true,
 		jest: true
 	},
-	extends: ["eslint:recommended", "plugin:react/recommended"],
+	extends: [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:react-hooks/recommended",
+	],
 	parserOptions: {
+		ecmaVersion: 2020,
 		ecmaFeatures: {
-			jsx: true
+			impliedStrict: true,
+			jsx: true,
 		},
-		sourceType: "module"
+		sourceType: "module",
 	},
-	plugins: ["react"],
+	plugins: ["react", "react-hooks"],
+	settings: {
+		react: {
+			version: "detect",
+		},
+	},
 	rules: {
+		// You can do your customizations here...
+		// For example, if you don't want to use the prop-types package,
+		// you can turn off that recommended rule with: 'react/prop-types': ['off']
 		indent: ["error", 2, {SwitchCase: 1}],
 		"linebreak-style": ["error", "unix"],
 		quotes: ["error", "single"],
 		semi: ["error", "always"],
 		"no-console": ["warn", {allow: ["clear", "info", "error", "dir", "trace"]}]
-	}
+	},
 };

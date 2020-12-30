@@ -1,7 +1,8 @@
+// Handle all the routing
 import express from "express";
 import { MongoClient, ObjectID } from "mongodb";
 import assert from "assert";
-import config from "../config";
+import config from "../server/config";
 
 let mdb; // MongoDB object
 MongoClient.connect(config.mongodbUri, {useUnifiedTopology: true}, (err, client) => {
