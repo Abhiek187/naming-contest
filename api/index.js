@@ -71,12 +71,11 @@ router.post("/names", (req, res) => {
 	// Insert the new name into names
 	mdb.collection("names").insertOne({ name }).then(result =>
 		// Find the contest associated with the name and add it to the name IDs
-		mdb.collection("contests").findAndModify(
+		mdb.collection("contests").findOneAndUpdate(
 			{ _id: contestId }, // query to find the contest
-			[], // sort the records
 			// result.insertedId = the _id of the inserted object
 			{ $push: { nameIds: result.insertedId } }, // modify the name IDs
-			{ new: true } // return the updated collection
+			{ returnOriginal: false } // return the updated collection
 		).then(doc =>
 			res.send({
 				// doc.value = updated contests collection

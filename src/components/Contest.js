@@ -8,8 +8,14 @@ class Contest extends Component {
 
 	handleSubmit = event => {
 		event.preventDefault(); // don't reload the browser
+		const newName = this.refs.newNameInput.value;
+
+		if (newName.length === 0) {
+			return; // don't add an empty name to the list
+		}
+
 		// Read the value that the user typed
-		this.props.addName(this.refs.newNameInput.value, this.props._id);
+		this.props.addName(newName, this.props._id);
 		this.refs.newNameInput.value = ""; // clear the text field
 	};
 
