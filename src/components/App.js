@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useReducer } from "react";
 import Header from "./Header";
 import Contest from "./Contest";
 import ContestList from "./ContestList"
@@ -12,31 +12,31 @@ const onPopState = handler => {
 	window.onpopstate = handler;
 };
 
-class App extends React.Component {
-	static propTypes = {
-		initialData: PropTypes.object.isRequired
-	};
+const App = ({ initialData }) => {
+	// Initialize the state to be the initialData (with the contest property)
+	const [state, setState] = useReducer(
+		(state, newState) => ({ ...state, ...newState }),
+		initialData // useReducer() allows multiple states to be altered at once
+	);
 
-	state = this.props.initialData; // contains a contests property
-
-	componentDidMount() {
+	useEffect(() => {
 		// timers, listeners, ajax...
 		onPopState(event => {
 			// Called when the back button is pressed
-			this.setState({
+			setState({
 				// Get the ID gotten from going back a URL
 				currentContestId: (event.state || {}).currentContestId
 			});
 		});
-	}
 
-	componentWillUnmount() {
-		// clean timers, listeners
-		onPopState(null); // unregister the event
-	}
+		return () => {
+			// clean timers, listeners
+			onPopState(null); // unregister the event
+		};
+	}, []); // no componentDidUpdate()
 
 	// Go to the page with the selected contest ID
-	fetchContest = contestId => {
+	const fetchContest = contestId => {
 		pushState(
 			{ currentContestId: contestId },
 			`/contest/${contestId}`
@@ -44,19 +44,19 @@ class App extends React.Component {
 
 		// Look up the contest
 		api.fetchContest(contestId).then(contest => {
-			this.setState({
+			setState({
 				currentContestId: contest._id,
 				// Cache the fetched contest information into the state
 				contests: {
-					...this.state.contests,
+					...state.contests,
 					[contest._id]: contest
 				}
 			});
 		});
-	}
+	};
 
 	// Get all the contests
-	fetchContestList = () => {
+	const fetchContestList = () => {
 		pushState(
 			{ currentContestId: null },
 			"/"
@@ -64,57 +64,52 @@ class App extends React.Component {
 
 		// Look up the contest
 		api.fetchContestList().then(contests => {
-			this.setState({
+			setState({
 				currentContestId: null,
 				contests
 			});
 		});
-	}
+	};
 
-	fetchNames = nameIds => {
+	const fetchNames = nameIds => {
 		if (nameIds.length === 0) {
 			return;
 		}
 
 		api.fetchNames(nameIds).then(names => {
-			this.setState({ names });
+			setState({ names });
 		}).catch(console.error);
 	};
 
-	currentContest() {
-		return this.state.contests[this.state.currentContestId];
-	}
-
 	// What to display at the top
-	pageHeader() {
-		if (this.state.currentContestId) {
-			return this.currentContest().contestName;
+	const pageHeader = () => {
+		if (state.currentContestId) {
+			return state.contests[state.currentContestId].contestName;
 		} else {
 			return "Naming Contests"; // default header in the home page
 		}
-	}
+	};
 
-	lookupName = nameId => {
-		if (!this.state.names || !this.state.names[nameId]) {
+	const lookupName = nameId => {
+		if (!state.names || !state.names[nameId]) {
 			return {
 				name: "..." // placeholder while loading the names
 			};
 		} else {
-			return this.state.names[nameId];
+			return state.names[nameId];
 		}
 	};
 
-	addName = (newName, contestId) =>
+	const addName = (newName, contestId) =>
 		// Return the state of the promise in case the server is down
 		api.addName(newName, contestId).then(resp =>
-			this.setState({
-				// Add the new name to the updated contest
+			setState({
 				contests: {
-					...this.state.contests,
+					...state.contests,
 					[resp.updatedContest._id]: resp.updatedContest
 				},
 				names: {
-					...this.state.names,
+					...state.names,
 					[resp.newName._id]: resp.newName
 				}
 			})
@@ -123,31 +118,32 @@ class App extends React.Component {
 		});
 
 	// Either display all contests or the details of one contest
-	// (Not to be confused with currentContest())
-	currentContent() {
-		if (this.state.currentContestId) {
+	const currentContent = () => {
+		if (state.currentContestId) {
 			return <Contest
-					contestListClick={this.fetchContestList}
-					fetchNames={this.fetchNames}
-					lookupName={this.lookupName}
-					addName={this.addName}
-					{...this.currentContest()} />;
+					contestListClick={fetchContestList}
+					fetchNames={fetchNames}
+					lookupName={lookupName}
+					addName={addName}
+					{...state.contests[state.currentContestId]} />;
 		} else {
 			return <ContestList
-					contests={this.state.contests}
-					onContestClick={this.fetchContest} />;
+					contests={state.contests}
+					onContestClick={fetchContest} />;
 		}
-	}
+	};
 
-	render() {
-		// JSX code
-		return (
-			<div className="App">
-				<Header message={this.pageHeader()} />
-				{this.currentContent()}
-			</div>
-		);
-	}
+	// JSX code
+	return (
+		<div className="App">
+			<Header message={pageHeader()} />
+			{currentContent()}
+		</div>
+	);
+};
+
+App.propTypes = {
+	initialData: PropTypes.object.isRequired
 };
 
 export default App;

@@ -1,24 +1,22 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
 
-class ContestPreview extends Component {
-	handleClick = () => {
-		this.props.onClick(this.props._id);
+const ContestPreview = ({ _id, onClick, categoryName, contestName }) => {
+	const handleClick = () => {
+		onClick(_id);
 	};
 
-	render() {
-		return (
-			<div className="link ContestPreview" onClick={this.handleClick}>
-				<div className="category-name">
-					{this.props.categoryName}
-				</div>
-				<div className="contest-name">
-					{this.props.contestName}
-				</div>
+	return (
+		<div className="link ContestPreview" onClick={handleClick}>
+			<div className="category-name">
+				{categoryName}
 			</div>
-		);
-	}
-}
+			<div className="contest-name">
+				{contestName}
+			</div>
+		</div>
+	);
+};
 
 ContestPreview.propTypes = {
 	_id: PropTypes.string.isRequired,

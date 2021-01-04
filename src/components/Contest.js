@@ -1,103 +1,100 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-class Contest extends Component {
-	state = {
-		error: false
-	};
+const Contest = ({_id, description, contestListClick, fetchNames, nameIds, lookupName, addName}) => {
+	const [error, setError] = useState(false);
+	const newNameInput = useRef(null);
 
-	componentDidMount() {
-		this.props.fetchNames(this.props.nameIds);
-	}
+	useEffect(() => {
+		fetchNames(nameIds);
+	}, []); // only fetch names when the component did mount
 
-	handleSubmit = event => {
+	const handleSubmit = event => {
 		event.preventDefault(); // don't reload the browser
-		const newName = this.refs.newNameInput.value;
+		const newName = newNameInput.current.value;
 
 		if (newName.length === 0) {
 			return; // don't add an empty name to the list
 		}
 
 		// Read the value that the user typed
-		this.props.addName(newName, this.props._id).then(resp => {
-			this.refs.newNameInput.value = ""; // clear the text field
-			this.setState({ error: false });
+		addName(newName, _id).then(resp => {
+			newNameInput.current.value = ""; // clear the text field
+			setError(false);
 		}).catch(error => {
 			// The server is down
-			this.setState({ error: true });
+			setError(true);
 		});
 	};
 
-	render() {
-		return (
-			<div className="Contest">
-				<div className="card mb-3">
-					<div className="card-header">
-						<h3 className="card-title">Contest Description</h3>
-					</div>
-					<div className="card-body">
-						<div className="contest-description">
-						 	{this.props.description}
-						</div>
-					</div>
+	return (
+		<div className="Contest">
+			<div className="card mb-3">
+				<div className="card-header">
+					<h3 className="card-title">Contest Description</h3>
 				</div>
-
-				<div className="card mb-3">
-					<div className="card-header">
-						<h3 className="card-title">Proposed Names</h3>
+				<div className="card-body">
+					<div className="contest-description">
+					 	{description}
 					</div>
-					<div className="card-body name-scroll">
-						<ul className="list-group">
-							{this.props.nameIds.map(nameId =>
-								<li key={nameId} className="list-group-item">
-									{this.props.lookupName(nameId).name}
-								</li>
-							)}
-						</ul>
-					</div>
-				</div>
-
-				<div className="card mb-3">
-					<div className="card-header bg-info">
-						<h3 className="card-title">Propose a New Name</h3>
-					</div>
-					<div className="card-body">
-						<form onSubmit={this.handleSubmit}>
-							<div className="input-group">
-								<input type="text"
-									placeholder="New Name Here..."
-									ref="newNameInput"
-									className="form-control" />
-								<span className="input-group-btn">
-									<button type="submit" className="btn btn-info">Submit</button>
-								</span>
-							</div>
-						</form>
-					</div>
-				</div>
-
-				{this.state.error &&
-					<div>
-						<div className="alert alert-danger alert-dismissible fade show" role="alert">
-							The server has encountered an error. Please try again later.
-							<button type="button" className="btn-close" data-bs-dismiss="alert"
-								aria-label="Close"></button>
-						</div>
-					</div>
-				}
-
-				<div className="home-link link mb-3"
-					 onClick={this.props.contestListClick}>
-					 Contest List
 				</div>
 			</div>
-		);
-	}
-}
+
+			<div className="card mb-3">
+				<div className="card-header">
+					<h3 className="card-title">Proposed Names</h3>
+				</div>
+				<div className="card-body name-scroll">
+					<ul className="list-group">
+						{nameIds.map(nameId =>
+							<li key={nameId} className="list-group-item">
+								{lookupName(nameId).name}
+							</li>
+						)}
+					</ul>
+				</div>
+			</div>
+
+			<div className="card mb-3">
+				<div className="card-header bg-info">
+					<h3 className="card-title">Propose a New Name</h3>
+				</div>
+				<div className="card-body">
+					<form onSubmit={handleSubmit}>
+						<div className="input-group">
+							<input type="text"
+								placeholder="New Name Here..."
+								ref={newNameInput}
+								className="form-control" />
+							<span className="input-group-btn">
+								<button type="submit" className="btn btn-info">Submit</button>
+							</span>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			{error &&
+				<div>
+					<div className="alert alert-danger alert-dismissible fade show" role="alert">
+						The server has encountered an error. Please try again later.
+						<button type="button" className="btn-close" data-bs-dismiss="alert"
+							aria-label="Close"></button>
+					</div>
+				</div>
+			}
+
+			<div className="home-link link mb-3"
+				 onClick={contestListClick}>
+				 Contest List
+			</div>
+		</div>
+	);
+};
 
 Contest.propTypes = {
 	_id: PropTypes.string.isRequired,
-	id: PropTypes.number.isRequired,
+	description: PropTypes.string.isRequired,
 	contestListClick: PropTypes.func.isRequired,
 	fetchNames: PropTypes.func.isRequired,
 	nameIds: PropTypes.array.isRequired,
