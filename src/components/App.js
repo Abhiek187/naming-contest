@@ -23,10 +23,26 @@ const App = ({ initialData }) => {
 		// timers, listeners, ajax...
 		onPopState(event => {
 			// Called when the back button is pressed
-			setState({
-				// Get the ID gotten from going back a URL
-				currentContestId: (event.state || {}).currentContestId
-			});
+			// Get the ID gotten from going back a URL
+			const contestId = (event.state || {}).currentContestId;
+
+			// Fetch the details about a contest if going back to it
+			if (contestId) {
+				api.fetchContest(contestId).then(contest => {
+					setState({
+						currentContestId: contest._id,
+						// Cache the fetched contest information into the state
+						contests: {
+							...state.contests,
+							[contest._id]: contest
+						}
+					});
+				});
+			} else {
+				setState({
+					currentContestId: contestId
+				});
+			}
 		});
 
 		return () => {
