@@ -1,5 +1,8 @@
 # naming-contest
+
 Full-stack web app using React, NodeJS, and MongoDB
+
+![sample contest page](screenshot.png)
 
 ## How to Run
 
