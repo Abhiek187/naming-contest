@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { useEffect, useReducer } from "react";
 import Header from "./Header";
 import Contest from "./Contest";
-import ContestList from "./ContestList"
+import ContestList from "./ContestList";
 import * as api from "../api";
 
 const pushState = (obj, url) =>
@@ -49,7 +49,7 @@ const App = ({ initialData }) => {
 			// clean timers, listeners
 			onPopState(null); // unregister the event
 		};
-	}, []); // no componentDidUpdate()
+	}, [state.contests]); // no componentDidUpdate()
 
 	// Go to the page with the selected contest ID
 	const fetchContest = contestId => {

@@ -7,7 +7,7 @@ const Contest = ({_id, description, contestListClick, fetchNames, nameIds, looku
 
 	useEffect(() => {
 		fetchNames(nameIds);
-	}, []); // only fetch names when the component did mount
+	}, [fetchNames, nameIds]); // only fetch names when the component did mount
 
 	const handleSubmit = event => {
 		event.preventDefault(); // don't reload the browser
@@ -18,10 +18,10 @@ const Contest = ({_id, description, contestListClick, fetchNames, nameIds, looku
 		}
 
 		// Read the value that the user typed
-		addName(newName, _id).then(resp => {
+		addName(newName, _id).then(() => {
 			newNameInput.current.value = ""; // clear the text field
 			setError(false);
-		}).catch(error => {
+		}).catch(() => {
 			// The server is down
 			setError(true);
 		});
@@ -85,8 +85,8 @@ const Contest = ({_id, description, contestListClick, fetchNames, nameIds, looku
 			}
 
 			<div className="home-link link mb-3"
-				 onClick={contestListClick}>
-				 Contest List
+				onClick={contestListClick}>
+				Contest List
 			</div>
 		</div>
 	);

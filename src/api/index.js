@@ -54,7 +54,7 @@ router.get("/names/:nameIds", (req, res) => {
 	// Find all the names for each name ID
 	mdb.collection("names").find({ _id: {$in: nameIds} })
 		.each((err, name) => {
-			assert.equal(null, err);
+			assert.strictEqual(null, err);
 
 			if (!name) {
 				// No more names (make the key names)
